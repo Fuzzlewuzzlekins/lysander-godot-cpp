@@ -8,7 +8,8 @@ namespace godot {
         GDCLASS(Entity, AnimatedSprite2D)
 
         private:
-            // todo: put member variables here
+            double entSpeed;
+            double animFrameRate;
     
         protected:
             static void _bind_methods();
@@ -16,8 +17,12 @@ namespace godot {
         public:
             Entity();
             ~Entity();
+            void _ready() override;
             void _process(double delta) override;
-            // todo: put getters and setters here
+            void set_entity_speed(const double p_entSpeed); 
+            double get_entity_speed() const;
+            void set_anim_frame_rate(const double p_animFrameRate);
+            double get_anim_frame_rate() const;
 
     };
 }
