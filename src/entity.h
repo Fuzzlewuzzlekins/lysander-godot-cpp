@@ -19,6 +19,7 @@ namespace godot {
             ~Entity();
             void _ready() override;
             void _process(double delta) override;
+            void _on_animation_finished();
             void set_entity_speed(const double p_entSpeed); 
             double get_entity_speed() const;
             void set_anim_frame_rate(const double p_animFrameRate);
