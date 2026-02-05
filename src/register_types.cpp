@@ -20,7 +20,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(ExampleClass);
 	GDREGISTER_CLASS(Entity);
 	GDREGISTER_CLASS(Player);
-	GDREGISTER_CLASS(NPC);
+	// GDREGISTER_CLASS(NPC);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

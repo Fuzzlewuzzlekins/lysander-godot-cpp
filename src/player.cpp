@@ -8,25 +8,11 @@
 using namespace godot;
 
 void Player::_bind_methods() {
-    // Bind getters, setters, and other non-inherited methods here
-    ClassDB::bind_method(D_METHOD("_on_animation_finished"), &Player::_on_animation_finished);
-    ClassDB::bind_method(D_METHOD("get_entity_speed"), &Player::get_entity_speed);
-    ClassDB::bind_method(D_METHOD("set_entity_speed", "p_entSpeed"), &Player::set_entity_speed);
-    ClassDB::bind_method(D_METHOD("get_anim_frame_rate"), &Player::get_anim_frame_rate);
-    ClassDB::bind_method(D_METHOD("set_anim_frame_rate", "p_animFrameRate"), &Player::set_anim_frame_rate);
-
-    // "Export" gettable/settable properties
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "entSpeed"), "set_entity_speed", "get_entity_speed");
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "animFrameRate"), "set_anim_frame_rate", "get_anim_frame_rate");
+    // Put Player-unique bindings here. Calling super not needed, throws warnings
 }
 
 Player::Player() {
-    // Initialize values
-    entSpeed = 200.0;
-    animFrameRate = 10.0;
-    // Pixel art settings: 4x scale, nearest
-    set_scale(Vector2(4.0,4.0));
-    set_texture_filter(TEXTURE_FILTER_NEAREST);
+    // Does anything need to be done here? Calling super makes Godot crash
 }
 
 Player::~Player() {
@@ -34,24 +20,8 @@ Player::~Player() {
 }
 
 void Player::_ready() {
-    // For each animation in SpriteFrames, set FPS
-    PackedStringArray sprite_animations = get_sprite_frames()->get_animation_names();
-    for (int i=0; i<sprite_animations.size(); i++) {
-        get_sprite_frames()->set_animation_speed(sprite_animations[i], animFrameRate);
-    }
-    set_animation("idle");
-
-    // Create Area2D child
-    hitbox = memnew(Area2D);
-    CollisionShape2D* hitbox_cshape = memnew(CollisionShape2D);
-    RectangleShape2D* hitbox_cshape_rect = memnew(RectangleShape2D);
-    hitbox_cshape_rect->set_size(get_sprite_frames()->get_frame_texture("idle", 0)->get_size());
-    hitbox_cshape->set_shape(hitbox_cshape_rect);
-    hitbox->add_child(hitbox_cshape);
-    this->add_child(hitbox);
-
-    // Set up signals
-    this->connect("animation_finished", Callable(this, "_on_animation_finished"));
+    // Trust in parent class Entity's _ready() function (sets up animations and subtree)
+    Entity::_ready();
 }
 
 void Player::_process(double delta) {
@@ -80,30 +50,4 @@ void Player::_process(double delta) {
     if (input->is_physical_key_pressed(KEY_DOWN) && currentAnim == "idle") {
         play("sit");
     }
-}
-
-void Player::_on_animation_finished() {
-    // When the player finishes sitting, they should segue into sit_idle. Same for standing -> idle.
-    String currentAnim = get_animation().to_snake_case();
-    if (currentAnim == "sit") {
-        play("sit_idle");
-    } else if (currentAnim == "stand") {
-        play("idle");
-    }
-}
-
-void Player::set_entity_speed(const double p_entSpeed) {
-    entSpeed = p_entSpeed;
-}
-
-double Player::get_entity_speed() const {
-	return entSpeed;
-}
-
-void Player::set_anim_frame_rate(const double p_animFrameRate) {
-    animFrameRate = p_animFrameRate;
-}
-
-double Player::get_anim_frame_rate() const {
-    return animFrameRate;
 }

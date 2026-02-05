@@ -9,11 +9,14 @@ namespace godot {
         GDCLASS(Entity, AnimatedSprite2D)
 
         private:
+            // double entSpeed;
+            // double animFrameRate;
+            // Area2D* hitbox;
+    
+        protected:
             double entSpeed;
             double animFrameRate;
             Area2D* hitbox;
-    
-        protected:
             static void _bind_methods();
     
         public:

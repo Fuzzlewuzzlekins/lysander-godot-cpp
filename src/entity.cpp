@@ -1,6 +1,5 @@
 #include "entity.h"
 #include <godot_cpp/core/class_db.hpp>
-#include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/collision_shape2d.hpp>
 #include <godot_cpp/classes/rectangle_shape2d.hpp>
 #include <godot_cpp/classes/sprite_frames.hpp>
@@ -31,6 +30,7 @@ Entity::Entity() {
 
 Entity::~Entity() {
     // Cleanup if needed
+    queue_free();
 }
 
 void Entity::_ready() {
@@ -55,35 +55,11 @@ void Entity::_ready() {
 }
 
 void Entity::_process(double delta) {
-    // If player is not sitting or in the process of standing up, they're idle or walking.
-    // Continue to choose walk or idle based on input. TODO: replace physical keypresses w/ action mapping
-    String currentAnim = get_animation().to_snake_case();
-    Input* input = Input::get_singleton();
-    if (currentAnim != "sit" && currentAnim != "sit_idle" && currentAnim != "stand") {
-        // Move left if input is exclusive. TODO: replace physical keypresses w/ action mapping
-        if (input->is_physical_key_pressed(KEY_LEFT) && !input->is_physical_key_pressed(KEY_RIGHT)) {
-            play("walk");
-            set_flip_h(true);
-            set_position(Vector2(get_position().x - (entSpeed*delta), get_position().y));
-        } else if (input->is_physical_key_pressed(KEY_RIGHT) && !input->is_physical_key_pressed(KEY_LEFT)) {
-            play("walk");
-            set_flip_h(false);
-            set_position(Vector2(get_position().x + (entSpeed*delta), get_position().y));
-        } else {
-            play("idle");
-        }
-    }
-    // If player is not moving, handle sitting and standing
-    if (input->is_physical_key_pressed(KEY_UP) && currentAnim == "sit_idle") {
-        play("stand");
-    }
-    if (input->is_physical_key_pressed(KEY_DOWN) && currentAnim == "idle") {
-        play("sit");
-    }
+    // Entity's behavior will be coded here. Abstracted out to subclasses Player and NPC.
 }
 
 void Entity::_on_animation_finished() {
-    // When the player finishes sitting, they should segue into sit_idle. Same for standing -> idle.
+    // When the entity finishes sitting, they should segue into sit_idle. Same for standing -> idle.
     String currentAnim = get_animation().to_snake_case();
     if (currentAnim == "sit") {
         play("sit_idle");
