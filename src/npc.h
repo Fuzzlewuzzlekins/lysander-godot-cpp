@@ -5,20 +5,21 @@
 
 namespace godot {
     
-    class Entity : public AnimatedSprite2D {
-        GDCLASS(Entity, AnimatedSprite2D)
+    class NPC : public AnimatedSprite2D {
+        GDCLASS(NPC, AnimatedSprite2D)
 
         private:
             double entSpeed;
             double animFrameRate;
             Area2D* hitbox;
+            bool interactible;
     
         protected:
             static void _bind_methods();
     
         public:
-            Entity();
-            ~Entity();
+            NPC();
+            ~NPC();
             void _ready() override;
             void _process(double delta) override;
             void _on_animation_finished();

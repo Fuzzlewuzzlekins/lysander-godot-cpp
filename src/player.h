@@ -5,8 +5,8 @@
 
 namespace godot {
     
-    class Entity : public AnimatedSprite2D {
-        GDCLASS(Entity, AnimatedSprite2D)
+    class Player : public AnimatedSprite2D {
+        GDCLASS(Player, AnimatedSprite2D)
 
         private:
             double entSpeed;
@@ -17,8 +17,8 @@ namespace godot {
             static void _bind_methods();
     
         public:
-            Entity();
-            ~Entity();
+            Player();
+            ~Player();
             void _ready() override;
             void _process(double delta) override;
             void _on_animation_finished();

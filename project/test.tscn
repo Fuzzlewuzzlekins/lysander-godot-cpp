@@ -6,8 +6,8 @@
 [node name="Test" type="Node"]
 script = ExtResource("1_8uh7m")
 
-[node name="Entity" type="Entity" parent="."]
+[node name="Player" type="Player" parent="."]
 position = Vector2(640, 392)
 sprite_frames = ExtResource("2_8uh7m")
 animation = &"idle"
-frame_progress = 0.28976065
+frame_progress = 0.95552266

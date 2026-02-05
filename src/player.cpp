@@ -1,4 +1,4 @@
-#include "entity.h"
+#include "player.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/collision_shape2d.hpp>
@@ -7,20 +7,20 @@
 
 using namespace godot;
 
-void Entity::_bind_methods() {
+void Player::_bind_methods() {
     // Bind getters, setters, and other non-inherited methods here
-    ClassDB::bind_method(D_METHOD("_on_animation_finished"), &Entity::_on_animation_finished);
-    ClassDB::bind_method(D_METHOD("get_entity_speed"), &Entity::get_entity_speed);
-    ClassDB::bind_method(D_METHOD("set_entity_speed", "p_entSpeed"), &Entity::set_entity_speed);
-    ClassDB::bind_method(D_METHOD("get_anim_frame_rate"), &Entity::get_anim_frame_rate);
-    ClassDB::bind_method(D_METHOD("set_anim_frame_rate", "p_animFrameRate"), &Entity::set_anim_frame_rate);
+    ClassDB::bind_method(D_METHOD("_on_animation_finished"), &Player::_on_animation_finished);
+    ClassDB::bind_method(D_METHOD("get_entity_speed"), &Player::get_entity_speed);
+    ClassDB::bind_method(D_METHOD("set_entity_speed", "p_entSpeed"), &Player::set_entity_speed);
+    ClassDB::bind_method(D_METHOD("get_anim_frame_rate"), &Player::get_anim_frame_rate);
+    ClassDB::bind_method(D_METHOD("set_anim_frame_rate", "p_animFrameRate"), &Player::set_anim_frame_rate);
 
     // "Export" gettable/settable properties
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "entSpeed"), "set_entity_speed", "get_entity_speed");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "animFrameRate"), "set_anim_frame_rate", "get_anim_frame_rate");
 }
 
-Entity::Entity() {
+Player::Player() {
     // Initialize values
     entSpeed = 200.0;
     animFrameRate = 10.0;
@@ -29,11 +29,11 @@ Entity::Entity() {
     set_texture_filter(TEXTURE_FILTER_NEAREST);
 }
 
-Entity::~Entity() {
+Player::~Player() {
     // Cleanup if needed
 }
 
-void Entity::_ready() {
+void Player::_ready() {
     // For each animation in SpriteFrames, set FPS
     PackedStringArray sprite_animations = get_sprite_frames()->get_animation_names();
     for (int i=0; i<sprite_animations.size(); i++) {
@@ -54,7 +54,7 @@ void Entity::_ready() {
     this->connect("animation_finished", Callable(this, "_on_animation_finished"));
 }
 
-void Entity::_process(double delta) {
+void Player::_process(double delta) {
     // If player is not sitting or in the process of standing up, they're idle or walking.
     // Continue to choose walk or idle based on input. TODO: replace physical keypresses w/ action mapping
     String currentAnim = get_animation().to_snake_case();
@@ -82,7 +82,7 @@ void Entity::_process(double delta) {
     }
 }
 
-void Entity::_on_animation_finished() {
+void Player::_on_animation_finished() {
     // When the player finishes sitting, they should segue into sit_idle. Same for standing -> idle.
     String currentAnim = get_animation().to_snake_case();
     if (currentAnim == "sit") {
@@ -92,18 +92,18 @@ void Entity::_on_animation_finished() {
     }
 }
 
-void Entity::set_entity_speed(const double p_entSpeed) {
+void Player::set_entity_speed(const double p_entSpeed) {
     entSpeed = p_entSpeed;
 }
 
-double Entity::get_entity_speed() const {
+double Player::get_entity_speed() const {
 	return entSpeed;
 }
 
-void Entity::set_anim_frame_rate(const double p_animFrameRate) {
+void Player::set_anim_frame_rate(const double p_animFrameRate) {
     animFrameRate = p_animFrameRate;
 }
 
-double Entity::get_anim_frame_rate() const {
+double Player::get_anim_frame_rate() const {
     return animFrameRate;
 }
