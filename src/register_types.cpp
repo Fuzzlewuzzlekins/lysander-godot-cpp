@@ -6,6 +6,7 @@
 #include <godot_cpp/godot.hpp>
 
 #include "example_class.h"
+#include "gamestate.h"
 #include "entity.h"
 #include "player.h"
 #include "npc.h"
@@ -18,9 +19,10 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 		return;
 	}
 	GDREGISTER_CLASS(ExampleClass);
+	GDREGISTER_CLASS(Gamestate);
 	GDREGISTER_CLASS(Entity);
 	GDREGISTER_CLASS(Player);
-	// GDREGISTER_CLASS(NPC);
+	GDREGISTER_CLASS(NPC);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

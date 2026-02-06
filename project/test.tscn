@@ -6,14 +6,33 @@
 [node name="Test" type="Node"]
 script = ExtResource("1_8uh7m")
 
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 2048.0
+offset_bottom = 800.0
+color = Color(0, 0, 0, 1)
+
 [node name="Player" type="Player" parent="."]
-position = Vector2(799, 408)
+position = Vector2(615, 420)
 sprite_frames = ExtResource("2_8uh7m")
 animation = &"idle"
-frame_progress = 0.10487946
+frame_progress = 0.88964635
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+limit_left = 0
+limit_top = 0
+limit_right = 2048
+limit_bottom = 800
+drag_horizontal_enabled = true
 
 [node name="Entity" type="Entity" parent="."]
-position = Vector2(493, 399)
+position = Vector2(413, 418)
+sprite_frames = ExtResource("2_8uh7m")
+animation = &"idle"
+frame_progress = 0.000290022
+
+[node name="NPC" type="NPC" parent="."]
+modulate = Color(1, 0.47058824, 1, 1)
+position = Vector2(806, 416)
 sprite_frames = ExtResource("2_8uh7m")
 animation = &"idle"
 frame_progress = 0.000290022

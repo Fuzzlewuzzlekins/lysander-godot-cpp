@@ -1,9 +1,6 @@
 #include "player.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/input.hpp>
-#include <godot_cpp/classes/collision_shape2d.hpp>
-#include <godot_cpp/classes/rectangle_shape2d.hpp>
-#include <godot_cpp/classes/sprite_frames.hpp>
 
 using namespace godot;
 
