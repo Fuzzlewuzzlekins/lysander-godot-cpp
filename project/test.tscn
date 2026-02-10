@@ -12,10 +12,10 @@ offset_bottom = 800.0
 color = Color(0, 0, 0, 1)
 
 [node name="Player" type="Player" parent="."]
-position = Vector2(615, 420)
+position = Vector2(646.94507, 420)
 sprite_frames = ExtResource("2_8uh7m")
 animation = &"idle"
-frame_progress = 0.88964635
+frame_progress = 0.7651451
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 limit_left = 0
@@ -30,7 +30,8 @@ sprite_frames = ExtResource("2_8uh7m")
 animation = &"idle"
 frame_progress = 0.000290022
 
-[node name="NPC" type="NPC" parent="."]
+[node name="NPC" type="NPC" parent="." node_paths=PackedStringArray("targetPlayer")]
+targetPlayer = NodePath("../Player")
 modulate = Color(1, 0.47058824, 1, 1)
 position = Vector2(806, 416)
 sprite_frames = ExtResource("2_8uh7m")

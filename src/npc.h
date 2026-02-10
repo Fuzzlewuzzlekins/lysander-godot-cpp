@@ -1,6 +1,7 @@
 #pragma once
 
 #include "entity.h"
+#include "player.h"
 
 namespace godot {
     
@@ -9,6 +10,7 @@ namespace godot {
 
         private:
             bool interactible;
+            Player* targetPlayer;
     
         protected:
             static void _bind_methods();
@@ -18,6 +20,9 @@ namespace godot {
             ~NPC();
             void _ready() override;
             void _process(double delta) override;
+            void _on_player_interact(Area2D* closest_area);
+            void set_target_player(Player* p_player);
+            Player* get_target_player() const;
 
     };
 }
