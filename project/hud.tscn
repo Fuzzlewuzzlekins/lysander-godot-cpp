@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bue6448e60wtb"]
+
+[node name="HUD" type="CanvasLayer"]
+
+[node name="TopRightPanel" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -264.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 57.0
+grow_horizontal = 0
+metadata/_edit_group_ = true
+
+[node name="EnergyBar" type="ProgressBar" parent="TopRightPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24

@@ -12,10 +12,11 @@ offset_bottom = 800.0
 color = Color(0, 0, 0, 1)
 
 [node name="Player" type="Player" parent="."]
-position = Vector2(646.94507, 420)
+position = Vector2(544.3351, 420)
 sprite_frames = ExtResource("2_8uh7m")
-animation = &"idle"
-frame_progress = 0.7651451
+animation = &"sit_idle"
+frame_progress = 0.3360359
+flip_h = true
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 limit_left = 0

@@ -1,4 +1,8 @@
 #include "gamestate.h"
+#include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/classes/progress_bar.hpp>
 
 using namespace godot;
 
@@ -21,6 +25,7 @@ Gamestate::Gamestate() {
     currentDay = 0;
     currentTime = 700;
     currentEnergy = 90;
+    gameHUD = nullptr;
 }
 
 Gamestate::~Gamestate() {
@@ -29,10 +34,17 @@ Gamestate::~Gamestate() {
 
 void Gamestate::_ready() {
     // Declare extra things if needed
+    // Find the HUD. It's the second autoload of our project, so it should be at index 1
+    // TODO: find a cleaner way to do this? For some reason find_child() isn't working.
+    gameHUD = get_tree()->get_root()->get_child(1);
 }
 
 void Gamestate::_process(double delta) {
     // Game loop. Use for special handling if needed
+
+    // // Code below will update energy bar of HUD. TODO: move to appropriate event or signal
+    // ProgressBar* energyBar = Object::cast_to<ProgressBar>(gameHUD->get_node_or_null("TopRightPanel/EnergyBar"));
+    // energyBar->set_value(currentEnergy);
 }
 
 void Gamestate::set_current_day(const int p_currentDay) {
