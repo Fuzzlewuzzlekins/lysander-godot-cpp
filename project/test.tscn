@@ -12,11 +12,10 @@ offset_bottom = 800.0
 color = Color(0, 0, 0, 1)
 
 [node name="Player" type="Player" parent="."]
-position = Vector2(544.3351, 420)
+position = Vector2(538.3356, 420)
 sprite_frames = ExtResource("2_8uh7m")
-animation = &"sit_idle"
-frame_progress = 0.3360359
-flip_h = true
+animation = &"sit"
+frame_progress = 0.3440754
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 limit_left = 0
@@ -25,16 +24,25 @@ limit_right = 2048
 limit_bottom = 800
 drag_horizontal_enabled = true
 
-[node name="Entity" type="Entity" parent="."]
-position = Vector2(413, 418)
+[node name="NPC" type="NPC" parent="." node_paths=PackedStringArray("targetPlayer", "assignment")]
+targetPlayer = NodePath("../Player")
+assignment = NodePath("NpcTestTask")
+modulate = Color(1, 0.47058824, 1, 1)
+position = Vector2(806, 416)
 sprite_frames = ExtResource("2_8uh7m")
 animation = &"idle"
 frame_progress = 0.000290022
 
-[node name="NPC" type="NPC" parent="." node_paths=PackedStringArray("targetPlayer")]
+[node name="NpcTestTask" type="Task" parent="NPC" node_paths=PackedStringArray("turnIn")]
+turnIn = NodePath("../../NPC2")
+offset_right = 24.0
+offset_bottom = 31.0
+text = "Go talk to the yellow guy"
+
+[node name="NPC2" type="NPC" parent="." node_paths=PackedStringArray("targetPlayer")]
 targetPlayer = NodePath("../Player")
-modulate = Color(1, 0.47058824, 1, 1)
-position = Vector2(806, 416)
+modulate = Color(1, 1, 0.62352943, 1)
+position = Vector2(280, 424)
 sprite_frames = ExtResource("2_8uh7m")
 animation = &"idle"
 frame_progress = 0.000290022

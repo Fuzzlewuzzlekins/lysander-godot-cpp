@@ -16,16 +16,18 @@ void Gamestate::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_current_energy", "p_currentEnergy"), &Gamestate::set_current_energy);
 
     // "Export" gettable/settable properties
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "currentDay"), "set_current_day", "get_current_day");
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "currentTime"), "set_current_time", "get_current_time");
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "currentEnergy"), "set_current_energy", "get_current_energy");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "currentDay"), "set_current_day", "get_current_day");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "currentTime"), "set_current_time", "get_current_time");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "currentEnergy"), "set_current_energy", "get_current_energy");
 }
 
 Gamestate::Gamestate() {
     currentDay = 0;
-    currentTime = 700;
+    currentTime = 420; // 7 AM
     currentEnergy = 90;
-    gameHUD = nullptr;
+    // gameHUD = nullptr;
+    energyBarHUD = nullptr;
+    taskListHUD = nullptr;
 }
 
 Gamestate::~Gamestate() {
@@ -36,7 +38,11 @@ void Gamestate::_ready() {
     // Declare extra things if needed
     // Find the HUD. It's the second autoload of our project, so it should be at index 1
     // TODO: find a cleaner way to do this? For some reason find_child() isn't working.
-    gameHUD = get_tree()->get_root()->get_child(1);
+    Node* gameHUD = get_tree()->get_root()->get_child(1);
+    energyBarHUD = gameHUD->find_child("EnergyBar");
+    taskListHUD = gameHUD->find_child("TaskList");
+    // Initialize HUD values
+    Object::cast_to<ProgressBar>(energyBarHUD)->set_value(currentEnergy);
 }
 
 void Gamestate::_process(double delta) {
@@ -65,6 +71,9 @@ int Gamestate::get_current_time() const {
 
 void Gamestate::set_current_energy(const int p_currentEnergy) {
     currentEnergy = p_currentEnergy;
+    if (energyBarHUD != nullptr) {
+        Object::cast_to<ProgressBar>(energyBarHUD)->set_value(currentEnergy);
+    }
 }
 
 int Gamestate::get_current_energy() const {

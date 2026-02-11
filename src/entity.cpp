@@ -30,7 +30,7 @@ Entity::Entity() {
 
 Entity::~Entity() {
     // Cleanup if needed
-    queue_free();
+    // queue_free();
 }
 
 void Entity::_ready() {

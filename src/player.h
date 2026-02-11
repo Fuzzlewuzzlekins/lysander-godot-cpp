@@ -7,6 +7,9 @@ namespace godot {
     class Player : public Entity {
         GDCLASS(Player, Entity)
     
+        private:
+            Area2D* closestArea;
+        
         protected:
             static void _bind_methods();
     

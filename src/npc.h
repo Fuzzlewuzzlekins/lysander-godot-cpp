@@ -2,6 +2,7 @@
 
 #include "entity.h"
 #include "player.h"
+#include "task.h"
 
 namespace godot {
     
@@ -20,7 +21,9 @@ namespace godot {
             ~NPC();
             void _ready() override;
             void _process(double delta) override;
-            void _on_player_interact(Area2D* closest_area);
+            void _on_player_interact(Area2D* area);
+            void _on_player_highlight(Area2D* area);
+            void _on_player_unhighlight(Area2D* area);
             void set_target_player(Player* p_player);
             Player* get_target_player() const;
 

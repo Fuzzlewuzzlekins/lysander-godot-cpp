@@ -7,11 +7,6 @@ namespace godot {
     
     class Entity : public AnimatedSprite2D {
         GDCLASS(Entity, AnimatedSprite2D)
-
-        private:
-            // double entSpeed;
-            // double animFrameRate;
-            // Area2D* hitbox;
     
         protected:
             double entSpeed;

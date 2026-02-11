@@ -7,11 +7,13 @@ using namespace godot;
 
 void Player::_bind_methods() {
     // Put Player-unique bindings here. Calling super not needed, throws warnings
-    ADD_SIGNAL(MethodInfo("interact", PropertyInfo(Variant::OBJECT, "closest_area")));
+    ADD_SIGNAL(MethodInfo("interact", PropertyInfo(Variant::OBJECT, "area")));
+    ADD_SIGNAL(MethodInfo("highlight", PropertyInfo(Variant::OBJECT, "area")));
+    ADD_SIGNAL(MethodInfo("unhighlight", PropertyInfo(Variant::OBJECT, "area")));
 }
 
 Player::Player() {
-    // Does anything need to be done here? Calling super makes Godot crash
+    closestArea = nullptr;
 }
 
 Player::~Player() {
@@ -53,23 +55,56 @@ void Player::_process(double delta) {
     if ((input->is_action_pressed("sit_down") || input->is_action_just_pressed("toggle_sit")) && currentAnim == "idle") {
         play("sit");
     }
+    // // Handle interactions with environment
+    // if (input->is_action_just_pressed("interact")) {
+    //     TypedArray<Area2D> touchedAreas = hitbox->get_overlapping_areas();
+    //     if (!touchedAreas.is_empty()) {
+    //         // Determine closest overlapping Area2D; that's what we'll try to interact with
+    //         float closest_distance2 = 1000;
+    //         Area2D* closest_area;
+    //         for (int i=0; i<touchedAreas.size(); i++) {
+    //             Vector2 myPos = hitbox->get_global_position();
+    //             Area2D* areaChecking = Object::cast_to<Area2D>(touchedAreas[i]);
+    //             float temp_distance2 = myPos.distance_squared_to(areaChecking->get_global_position());
+    //             if (temp_distance2 < closest_distance2) {
+    //                 closest_distance2 = temp_distance2;
+    //                 closest_area = areaChecking;
+    //             }
+    //         }
+    //         emit_signal("interact", closest_area);
+    //     }
+    // }
+
     // Handle interactions with environment
-    if (input->is_action_just_pressed("interact")) {
-        TypedArray<Area2D> touchedAreas = hitbox->get_overlapping_areas();
-        if (!touchedAreas.is_empty()) {
-            // Determine closest overlapping Area2D; that's what we'll try to interact with
-            float closest_distance2 = 1000;
-            Area2D* closest_area;
-            for (int i=0; i<touchedAreas.size(); i++) {
-                Vector2 myPos = hitbox->get_global_position();
-                Area2D* areaChecking = Object::cast_to<Area2D>(touchedAreas[i]);
-                float temp_distance2 = myPos.distance_squared_to(areaChecking->get_global_position());
-                if (temp_distance2 < closest_distance2) {
-                    closest_distance2 = temp_distance2;
-                    closest_area = areaChecking;
-                }
+    TypedArray<Area2D> touchedAreas = hitbox->get_overlapping_areas();
+    if (!touchedAreas.is_empty()) {
+        // Determine closest overlapping Area2D
+        float closest_distance2 = 1000;
+        Area2D* new_closest_area;
+        for (int i=0; i<touchedAreas.size(); i++) {
+            Vector2 myPos = hitbox->get_global_position();
+            Area2D* areaChecking = Object::cast_to<Area2D>(touchedAreas[i]);
+            float temp_distance2 = myPos.distance_squared_to(areaChecking->get_global_position());
+            if (temp_distance2 < closest_distance2) {
+                closest_distance2 = temp_distance2;
+                new_closest_area = areaChecking;
             }
-            emit_signal("interact", closest_area);
+        }
+        // If the closest Area2D has changed, update our pointer and send appropriate signals
+        if (closestArea != new_closest_area) {
+            emit_signal("highlight", new_closest_area);
+            emit_signal("unhighlight", closestArea);
+            closestArea = new_closest_area;
+        }
+        // If the player has pressed Interact, send signal
+        if (input->is_action_just_pressed("interact")) {
+            emit_signal("interact", closestArea);
+        }
+    } else {
+        // If the player is touching nothing, release not-null pointer (if any) and send signal
+        if (closestArea != nullptr) {
+            emit_signal("unhighlight", closestArea);
+            closestArea = nullptr;
         }
     }
 }
