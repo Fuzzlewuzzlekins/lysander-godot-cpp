@@ -1,8 +1,10 @@
 #include "npc.h"
+#include "gamestate.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/sprite_frames.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/classes/progress_bar.hpp>
 #include <godot_cpp/classes/tween.hpp>
 #include <godot_cpp/classes/callback_tweener.hpp>
 #include <godot_cpp/classes/property_tweener.hpp>
@@ -38,6 +40,12 @@ void NPC::_ready() {
     targetPlayer->connect("interact", Callable(this, "_on_player_interact"));
     targetPlayer->connect("highlight", Callable(this, "_on_player_highlight"));
     targetPlayer->connect("unhighlight", Callable(this, "_on_player_unhighlight"));
+
+    // If I have a Task child, hide it on start
+    Node* assignment = get_child(0);
+    if (assignment != nullptr && assignment->get_class() == "Task") {
+        Object::cast_to<Task>(assignment)->hide();
+    }
 }
 
 void NPC::_process(double delta) {
@@ -53,6 +61,9 @@ void NPC::_on_player_interact(Area2D* area) {
         for (int i=0; i<taskList->get_child_count(); i++) {
             Task* task = Object::cast_to<Task>(taskList->get_child(i));
             if (task->get_turn_in() == this) {
+                // Spend energy to complete the task, if able
+                Gamestate* gamestate = Object::cast_to<Gamestate>(get_tree()->get_root()->get_child(0));
+                gamestate->set_current_energy(gamestate->get_current_energy() - task->get_energy_cost());
                 // Mark the task as complete, then delete
                 task->set_pressed(true);
                 task->set_disabled(true);
@@ -66,6 +77,7 @@ void NPC::_on_player_interact(Area2D* area) {
         Node* assignment = get_child(0);
         if (assignment != nullptr && assignment->get_class() == "Task") {
             // Assign task to Player by moving it into the TaskList
+            Object::cast_to<Task>(assignment)->show();
             assignment->reparent(taskList, false);
             Ref<Tween> tween = get_tree()->create_tween()->chain();
             tween->tween_property(assignment, "modulate:a", 0, 0.0);
@@ -80,6 +92,15 @@ void NPC::_on_player_highlight(Area2D* area) {
         // Animate to show I can be interacted with
         print_line("Gained focus:");
         print_line(this->get_name());
+        // Am I the turn-in point for an active Task? check the TaskList
+        Node* gameHUD = get_tree()->get_root()->get_child(1);
+        Node* taskList = gameHUD->find_child("TaskList");
+        for (int i=0; i<taskList->get_child_count(); i++) {
+            Task* task = Object::cast_to<Task>(taskList->get_child(i));
+            if (task->get_turn_in() == this && task->get_energy_cost() > 0) {
+                // TODO: If the task has a cost, flash a warning animation
+            }
+        }
     }
 }
 
@@ -88,6 +109,7 @@ void NPC::_on_player_unhighlight(Area2D* area) {
     if (area == hitbox) {
         print_line("Lost focus:");
         print_line(this->get_name());
+        // TODO: stop the task cost warning animation, if applicable. See above
     }
 }
 
