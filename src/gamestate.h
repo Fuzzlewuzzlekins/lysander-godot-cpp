@@ -11,9 +11,6 @@ namespace godot {
             int currentDay;
             int currentTime;
             int currentEnergy;
-            // Node* gameHUD;
-            Node* energyBarHUD;
-            Node* taskListHUD;
             // TODO: list of active tasks. Tasks should probably be a class
 
         protected:

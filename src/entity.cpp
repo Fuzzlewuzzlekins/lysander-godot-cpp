@@ -1,5 +1,6 @@
 #include "entity.h"
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/collision_shape2d.hpp>
 #include <godot_cpp/classes/rectangle_shape2d.hpp>
 #include <godot_cpp/classes/sprite_frames.hpp>
@@ -34,24 +35,26 @@ Entity::~Entity() {
 }
 
 void Entity::_ready() {
-    // For each animation in SpriteFrames, set FPS
-    PackedStringArray sprite_animations = get_sprite_frames()->get_animation_names();
-    for (int i=0; i<sprite_animations.size(); i++) {
-        get_sprite_frames()->set_animation_speed(sprite_animations[i], animFrameRate);
+    if (!Engine::get_singleton()->is_editor_hint()) {
+        // For each animation in SpriteFrames, set FPS
+        PackedStringArray sprite_animations = get_sprite_frames()->get_animation_names();
+        for (int i=0; i<sprite_animations.size(); i++) {
+            get_sprite_frames()->set_animation_speed(sprite_animations[i], animFrameRate);
+        }
+        set_animation("idle");
+
+        // Create Area2D child
+        hitbox = memnew(Area2D);
+        CollisionShape2D* hitbox_cshape = memnew(CollisionShape2D);
+        RectangleShape2D* hitbox_cshape_rect = memnew(RectangleShape2D);
+        hitbox_cshape_rect->set_size(get_sprite_frames()->get_frame_texture("idle", 0)->get_size());
+        hitbox_cshape->set_shape(hitbox_cshape_rect);
+        hitbox->add_child(hitbox_cshape);
+        this->add_child(hitbox);
+
+        // Set up signals
+        this->connect("animation_finished", Callable(this, "_on_animation_finished"));
     }
-    set_animation("idle");
-
-    // Create Area2D child
-    hitbox = memnew(Area2D);
-    CollisionShape2D* hitbox_cshape = memnew(CollisionShape2D);
-    RectangleShape2D* hitbox_cshape_rect = memnew(RectangleShape2D);
-    hitbox_cshape_rect->set_size(get_sprite_frames()->get_frame_texture("idle", 0)->get_size());
-    hitbox_cshape->set_shape(hitbox_cshape_rect);
-    hitbox->add_child(hitbox_cshape);
-    this->add_child(hitbox);
-
-    // Set up signals
-    this->connect("animation_finished", Callable(this, "_on_animation_finished"));
 }
 
 void Entity::_process(double delta) {

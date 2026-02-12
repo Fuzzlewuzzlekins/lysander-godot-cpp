@@ -7,6 +7,7 @@
 
 #include "example_class.h"
 #include "gamestate.h"
+#include "hud.h"
 #include "task.h"
 #include "entity.h"
 #include "player.h"
@@ -21,6 +22,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	}
 	GDREGISTER_CLASS(ExampleClass);
 	GDREGISTER_CLASS(Gamestate);
+	GDREGISTER_CLASS(HUD);
 	GDREGISTER_CLASS(Task);
 	GDREGISTER_CLASS(Entity);
 	GDREGISTER_CLASS(Player);

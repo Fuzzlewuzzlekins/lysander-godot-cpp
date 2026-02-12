@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bue6448e60wtb"]
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="HUD"]
 
 [node name="TopRightPanel" type="VBoxContainer" parent="."]
 anchors_preset = 1
@@ -11,10 +11,31 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 57.0
 grow_horizontal = 0
-metadata/_edit_group_ = true
 
-[node name="EnergyBar" type="ProgressBar" parent="TopRightPanel"]
+[node name="EnergyBar" type="Control" parent="TopRightPanel"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ProgressBarBase" type="ProgressBar" parent="TopRightPanel/EnergyBar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -128.0
+offset_right = 128.0
+offset_bottom = 38.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+
+[node name="ProgressBarOverlay" type="ProgressBar" parent="TopRightPanel/EnergyBar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -128.0
+offset_right = 128.0
+offset_bottom = 38.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 24
 
 [node name="TaskList" type="VBoxContainer" parent="TopRightPanel"]

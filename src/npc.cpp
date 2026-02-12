@@ -1,6 +1,9 @@
 #include "npc.h"
 #include "gamestate.h"
+#include "task.h"
+
 #include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/sprite_frames.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/window.hpp>
@@ -34,17 +37,19 @@ NPC::~NPC() {
 }
 
 void NPC::_ready() {
-    Entity::_ready();
+    if (!Engine::get_singleton()->is_editor_hint()) {
+        Entity::_ready();
 
-    // Connect signals of the Player that's been passed to us
-    targetPlayer->connect("interact", Callable(this, "_on_player_interact"));
-    targetPlayer->connect("highlight", Callable(this, "_on_player_highlight"));
-    targetPlayer->connect("unhighlight", Callable(this, "_on_player_unhighlight"));
+        // Connect signals of the Player that's been passed to us
+        targetPlayer->connect("interact", Callable(this, "_on_player_interact"));
+        targetPlayer->connect("highlight", Callable(this, "_on_player_highlight"));
+        targetPlayer->connect("unhighlight", Callable(this, "_on_player_unhighlight"));
 
-    // If I have a Task child, hide it on start
-    Node* assignment = get_child(0);
-    if (assignment != nullptr && assignment->get_class() == "Task") {
-        Object::cast_to<Task>(assignment)->hide();
+        // If I have a Task child, hide it on start
+        Node* assignment = get_child(0);
+        if (assignment != nullptr && assignment->get_class() == "Task") {
+            Object::cast_to<Task>(assignment)->hide();
+        }
     }
 }
 
